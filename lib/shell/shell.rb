@@ -14,6 +14,15 @@ module Shell
     
   end
   
+  class Input
+    
+    def self.text
+      STDOUT.flush
+      STDIN.gets.strip
+    end
+    
+  end
+  
   class Parser
     
     # defines the command of the application (e.g. 'push' in uplift push)
