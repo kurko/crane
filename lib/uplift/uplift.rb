@@ -14,6 +14,13 @@ module Uplift
       @command
       @config = load_config
       
+      @errors = Array.new
+      
+      # has_compulsory_config?
+      
+      @connection = nil
+      
+      # shows help whenever it's called for
       if Shell::Parser.is_option "help", @argv then
         help
         exit
@@ -22,6 +29,7 @@ module Uplift
       run
     end
     
+    # loads the config file and returns
     def load_config
       config = Hash.new
       
@@ -59,7 +67,7 @@ module Uplift
       
       @config = config
       @config
-    end
+    end #load_config
     
     # saves configurations to file
     def save_config
@@ -81,7 +89,7 @@ module Uplift
       end
 #      data
       
-    end
+    end #save_config
     
     def generates_config_syntax config
       data = ""

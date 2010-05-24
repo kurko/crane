@@ -23,8 +23,8 @@ module Uplift::Commands
       system "stty echo"
       print "\n"
       
-      print "Type the complete path to the site's folder (e.g. /home/user/public_html ): "
-      ftp['username'] = Shell::Input.text
+      print "Type the path to the site's folder (e.g. /public_html ): "
+      ftp['remote_root_dir'] = Shell::Input.text
 
       @config = { "ftp" => ftp }
       
