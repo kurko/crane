@@ -13,6 +13,8 @@ module Uplift
       super argv
       @command
       @config = load_config
+      @ignored_files = get_ignored_files
+      @local_files = Array.new
       
       @errors = Array.new
       
@@ -27,6 +29,10 @@ module Uplift
       end
       
       run
+    end
+    
+    def is_option option
+      Shell::Parser.is_option option, @argv
     end
     
     # loads the config file and returns
@@ -93,7 +99,7 @@ module Uplift
     
     def generates_config_syntax config
       data = ""
-
+      
       config.each {
         |key, value|
         
@@ -109,6 +115,17 @@ module Uplift
       data
       
     end # generates_config_syntax
+    
+    def get_ignored_files
+      ignored_files = Array.new
+      
+      config_file = File.open "config/ignore_files", "r"
+      config_file.each do |l|
+         ignored_files.push l.strip
+      end
+      
+      ignored_files
+    end
     
     def help
       true
