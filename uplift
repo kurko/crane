@@ -8,7 +8,7 @@ command = Shell::Parser::get_command ARGV
 #puts command
 
 unless command.empty? then
-  command_file = "uplifting/lib/uplift/commands/" + command + ".rb"
+  command_file = Uplift::UPLIFT_FOLDER+"lib/uplift/commands/" + command + ".rb"
   
   # checks if class file exists
   if File.exists? command_file then

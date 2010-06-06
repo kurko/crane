@@ -10,8 +10,10 @@ module Uplift
     # @command
     # options
     
-    
     def initialize argv
+      
+      require Uplift::UPLIFT_FOLDER+"lib/uplift/ftp.rb"
+      
       super argv
       @command
       @config = load_config
@@ -33,6 +35,46 @@ module Uplift
       run
     end
     
+    # return an instance of a FTP connection
+    def connect_ftp
+      require "net/ftp"
+      require 'timeout'
+      result = true
+      
+      if @connection.nil? then
+        host = @config['ftp']['host_address']
+        username = @config['ftp']['username']
+        password = @config['ftp']['password']
+        @connection = Net::FTP.new
+        @connection.passive = true
+        begin
+          Timeout.timeout(7) do
+            @connection.connect host, 21
+          end
+        rescue
+          @connection_error = "couldn't connect to host"
+          result = false
+        end
+        
+        begin
+          Timeout.timeout(4) do
+            @connection.login username, password
+          end
+        rescue
+          @connection_error = "invalid username/password"
+          result = false
+        end
+      end
+      
+      if result == false
+        @connection = false
+      end
+        
+      @connection
+      
+    end # connect_ftp
+    
+    # if there was typed any argument on ARGV starting with either -- or -
     def is_option option
       Shell::Parser.is_option option, @argv
     end

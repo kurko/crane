@@ -19,11 +19,48 @@ module Uplift::Commands
         exit
       end
       
-      puts "Send"
+      print "Connecting to host... "
       
+      ftp = connect_ftp
+      if ftp == false then
+        puts "ops, an error ocurred."
+        exit
+      else
+        puts "connected. Started sending files..."
+      end
       
-
+      push_files ftp
+      
     end # run
+    
+    def push_files ftp
+      
+      ftp = Uplift::Ftp.new :host => @config['ftp']['host_address'],
+                           :username => @config['ftp']['username'],
+                           :password => @config['ftp']['password']
+                           
+      
+      
+      prefix_dir = @config['ftp']['remote_root_dir']
+      unless prefix_dir[ prefix_dir.length-1,1 ] == "/" then
+        prefix_dir << "/"
+      end
+      
+      @local_files.each {
+        |f|
+        dir = prefix_dir+File.dirname(f)
+        
+        ftp.mkdir dir
+        pwd = ftp.pwd
+        ftp.chdir dir
+        result = ftp.putbinaryfile f, File.basename(f)
+        ftp.chdir pwd
+        STDOUT.flush
+        print "."
+      }
+      puts ""
+
+    end
     
     # if user defines a time interval for the file, check if it complies
     def within_defined_interval? file
