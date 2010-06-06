@@ -1,14 +1,14 @@
 #!/usr/bin/ruby
 
-require "lib/shell/shell.rb"
-require "lib/uplift/uplift.rb"
+require "uplifting/lib/shell/shell.rb"
+require "uplifting/lib/uplift/uplift.rb"
 
 
 command = Shell::Parser::get_command ARGV
 #puts command
 
 unless command.empty? then
-  command_file = "lib/uplift/commands/" + command + ".rb"
+  command_file = "uplifting/lib/uplift/commands/" + command + ".rb"
   
   # checks if class file exists
   if File.exists? command_file then

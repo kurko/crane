@@ -6,8 +6,6 @@ module Uplift::Commands
       puts "Starting tests:"
       puts ""
       
-      
-      
       # has configuration file?
       if config_has_file? then
         puts "\tConfiguration file: ok."

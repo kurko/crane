@@ -2,6 +2,8 @@ require "net/ftp"
 
 module Uplift
   
+  UPLIFT_FOLDER = "uplifting/"
+  
   class Engine < Shell::Run
     
     # @argv
@@ -119,7 +121,7 @@ module Uplift
     def get_ignored_files
       ignored_files = Array.new
       
-      config_file = File.open "config/ignore_files", "r"
+      config_file = File.open Uplift::UPLIFT_FOLDER+"config/ignore_files", "r"
       config_file.each do |l|
          ignored_files.push l.strip
       end
