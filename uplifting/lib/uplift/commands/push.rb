@@ -48,15 +48,29 @@ module Uplift::Commands
       
       @local_files.each {
         |f|
-        dir = prefix_dir+File.dirname(f)
         
+        STDOUT.flush
+        
+        st_mk = Time.new
+        
+        dir = prefix_dir+File.dirname(f)
         ftp.mkdir dir
+        
+        st_end = Time.new
+        t = st_end-st_mk
+        print ">> mkdir: "+t.inspect
+        
         pwd = ftp.pwd
         ftp.chdir dir
+        st_put = Time.new
         result = ftp.putbinaryfile f, File.basename(f)
-        ftp.chdir pwd
-        STDOUT.flush
+        st_putend = Time.new
+        t = st_putend-st_put
+        print " >> putfile: "+t.inspect
         print "."
+        print "\n"
+        
+        ftp.chdir pwd
       }
       puts ""
 
