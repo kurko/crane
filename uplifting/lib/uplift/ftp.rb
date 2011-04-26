@@ -53,6 +53,7 @@ module Uplift
     end
     
     def chdir var
+      #puts var
       @ftp.chdir var
     end
     
@@ -64,7 +65,9 @@ module Uplift
         return false
       end
       
+      
       pwd = @ftp.pwd
+      #puts pwd
       last_dir = ""
       each_dir.each {
         |d|
@@ -75,6 +78,8 @@ module Uplift
         if d[0,1] != "/" then
           d = "/" + d
         end
+        
+        #puts "\t\t"+is_dir.inspect+ " -- " + d
         
         if is_dir then
           @ftp.chdir last_dir+d
