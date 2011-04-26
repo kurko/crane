@@ -52,7 +52,13 @@ module Shell
   
   class Parser
     
-    # defines the command of the application (e.g. 'push' in uplift push)
+    # ARGV has a command, options and arguments. The design is:
+    #
+    #   $ bin_file command argument1 argument2 -option1 -option2
+    #
+    # get_options() and get_arguments() return Array. get_command()
+    # returns String.
+    
     def self.get_command argv = []
       command = String.new
       
@@ -64,18 +70,13 @@ module Shell
             break
         end
       }
-      
-      if command.empty? then
-        command = ""
-      end
-      
+      return false if command.empty?
       command
-      
-    end # get_command
+    end
     
-    # get only options in ARGV (arguments starting with _ or __)
     def self.get_options argv
-      @options = Array.new
+      @options = []
+      @sanitized_options = []
       
       argv.each {
         |e|
@@ -86,13 +87,18 @@ module Shell
             @options.push e[1,e_length]
         end
       }
-      @options
-    end # get_options
+      unless @options.empty?
+        @options.each { |e|
+          next if @sanitized_options.include?(e)
+          @sanitized_options << e
+        }
+      end
+      
+      @sanitized_options
+    end
     
-    # get arguments. arguments are anything written besides the command and options.
-    # in 'push today --list', 'today' is the argument
     def self.get_arguments argv
-      @arguments = Array.new
+      @arguments = []
       i = 0
       argv.each {
         |e|
@@ -102,18 +108,16 @@ module Shell
         
         e_length = e.length
         if e[0,2] != "--" and e[0,1] != "-"
-          
           @arguments.push e[0,e_length]
         end
-        
       }
       @arguments
-    end # get_options
+    end
     
     def self.is_option option, argv = Array.new
       argv_options = self.get_options argv
       argv_options.include?(option)
-    end # is_option
+    end
     
   end
   

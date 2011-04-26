@@ -1,20 +1,6 @@
 #!/usr/bin/ruby
 
-require "uplifting/lib/shell/shell.rb"
-require "uplifting/lib/uplift/uplift.rb"
+$:.unshift File.expand_path('../../lib/', __FILE__)
+require "uplift/shell_initializer"
 
-
-command = Shell::Parser::get_command ARGV
-#puts command
-
-unless command.empty? then
-  command_file = Uplift::UPLIFT_FOLDER+"lib/uplift/commands/" + command + ".rb"
-  
-  # checks if class file exists
-  if File.exists? command_file then
-    require command_file
-    command = command.capitalize
-    command_obj = Uplift::Commands.const_get(command).new(ARGV)
-    
-  end
-end
+shell = Shell::Initializer.new(ARGV)
