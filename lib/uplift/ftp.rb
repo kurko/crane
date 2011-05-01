@@ -5,43 +5,36 @@ module Uplift
 
   class Ftp
     
-    def initialize *c
-      
-      c = map_args *c
-      
-      result = true
-      
-      if @ftp.nil? then
-        host = c[:host]
-        username = c[:username]
-        password = c[:password]
-        @ftp = Net::FTP.new
-        @ftp.passive = true
-        begin
-          Timeout.timeout(7) do
-            @ftp.connect host, 21
-          end
-        rescue
-          @connection_error = "couldn't connect to host"
-          result = false
+    attr_accessor :ftp, :connection_error
+    
+    def initialize c = {}
+      @ftp = nil
+      connect(c) unless c.empty?
+    end
+    
+    def connect c = {}
+      port = c[:port] || 21
+
+      @ftp = Net::FTP.new
+      @ftp.passive = true
+      begin
+        Timeout.timeout(10) do
+          @ftp.connect c[:host], port
         end
-        
-        begin
-          Timeout.timeout(4) do
-            @ftp.login username, password
-          end
-        rescue
-          @connection_error = "invalid username/password"
-          result = false
-        end
+      rescue
+        @connection_error = "Couldn't connect to host"
       end
       
-      if result == false
-        @ftp = false
+      begin
+        Timeout.timeout(10) do
+          @ftp.login c[:username], c[:password]
+        end
+      rescue
+        @connection_error = "Invalid username/password"
       end
-        
-      @ftp
-      
+
+      return false if @connection_error
+      @ftp      
     end
     
     def method_missing name_symbol, *params
@@ -100,13 +93,10 @@ module Uplift
     
     private
     def map_args args
-      
-      result = Hash.new
-      args.each {
-        |k,v|
+      result = {}
+      args.each { |k,v|
         result[k] = v
       }
-      
       result
     end #map_args
     

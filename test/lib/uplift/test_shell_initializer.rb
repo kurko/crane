@@ -1,5 +1,6 @@
 require "test/unit"
 require "uplift/shell_initializer"
+require File.expand_path("../../../set_test_environment.rb", __FILE__)
 
 class TestShellInitializer < Test::Unit::TestCase
   
@@ -15,7 +16,8 @@ class TestShellInitializer < Test::Unit::TestCase
   end
   
   def test_command_exist
-    @obj = Shell::Initializer.new(["init"])
+    @obj = Shell::Initializer.new([])
+    @obj.command = "init"
     assert @obj.command_exist?
   end
 
@@ -24,8 +26,24 @@ class TestShellInitializer < Test::Unit::TestCase
     assert !@obj.command_exist?
   end
   
+  def test_command_file
+    @obj = Shell::Initializer.new([])
+    @obj.command = "init"
+    assert_equal(
+      File.expand_path("../../../../lib/uplift/commands/init.rb", __FILE__),
+      @obj.get_command_file )
+  end
+  
   def test_load_command
-    @obj = Shell::Initializer.new(["init"])
-    assert_equal @obj.load_command.class, "Init"
+    require File.expand_path("../../../../lib/uplift/commands/init.rb", __FILE__)
+    @obj = Shell::Initializer.new([])
+    assert_equal Uplift::Commands::Init, @obj.run_command("init", []).class
+  end
+  
+  def test_run
+    require File.expand_path("../../../../lib/uplift/commands/init.rb", __FILE__)
+    @obj = Shell::Initializer.new([])
+    @obj.command = "init"
+    assert_equal Uplift::Commands::Init, @obj.run.class
   end
 end

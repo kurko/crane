@@ -5,30 +5,46 @@ require "uplift/uplift"
 module Shell
   class Initializer
 
+    attr_accessor :command
+    
     def initialize argv
       @args = argv
-      @command = Shell::Parser::get_command @args
+      get_command
+      run if @command
     end
     
     def run
-
-      unless command.empty?
-        command_file = File.expand_path("../../lib/uplift/commands/" + command + ".rb", __FILE__)
-
-        # checks if class file exists
-        if File.exists? command_file then
-          require command_file
-          command = command.capitalize
-          command_obj = Uplift::Commands.const_get(command).new(@args)
+      if @command
+        if command_exist?
+          require get_command_file
+          return run_command @command
         end
       end
-      
-    end
-    
-    def should_exit?
-      return true unless @command
       false
     end
     
+    def should_exit?
+      return false || true unless @command
+    end
+    
+    def get_command
+      @command = Shell::Parser::get_command @args
+    end
+
+    def command_exist? command = false
+      File.exists? get_command_file(command)
+    end
+    
+    def get_command_file command = false
+      command = @command unless command
+      File.expand_path("../commands/" + command + ".rb", __FILE__)
+    end
+    
+    def run_command command, args = []
+      command = @command unless command
+      require get_command_file(command)
+      command.capitalize!
+      @command_obj = Uplift::Commands.const_get(command).new(@args)
+    end
   end
 end

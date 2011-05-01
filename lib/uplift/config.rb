@@ -1,7 +1,14 @@
 module Config
 
-  IGNORE_FILES = %w{
-    "uplift" "uplifting/" ".git" ".uplift_config" ".project" "nb_project" ".loadpath" ".gitignore"
-  }
+  IGNORE_FILES = [
+    "uplift",
+    ".git",
+    ".uplift_config",
+    ".project",
+    "nb_project",
+    ".loadpath",
+    ".gitignore",
+    ".gitmodules"
+  ]
 
 end

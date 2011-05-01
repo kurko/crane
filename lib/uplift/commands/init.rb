@@ -1,38 +1,38 @@
-module Uplift::Commands
+module Uplift
+  module Commands
+    class Init < Uplift::Engine
 
-  class Init < Uplift::Engine
-
-    def run
-      ask_ftp_info
+      def run
+        ask_ftp_info
       
-      save_config
-    end
+        save_config
+      end
     
-    def ask_ftp_info
-      ftp = Hash.new
+      def ask_ftp_info
+        ftp = Hash.new
       
-      print "Type in your FTP (e.g. ftp.mysite.com.br): "
-      ftp['host_address'] = Shell::Input.text
+        print "Type in your FTP (e.g. ftp.mysite.com.br): "
+        ftp['host_address'] = Shell::Input.text
       
-      print "Now FTP username: "
-      ftp['username'] = Shell::Input.text
+        print "Now FTP username: "
+        ftp['username'] = Shell::Input.text
       
-      system "stty -echo"
-      print "FTP password: "
-      ftp['password'] = Shell::Input.text
-      system "stty echo"
-      print "\n"
+        system "stty -echo"
+        print "FTP password: "
+        ftp['password'] = Shell::Input.text
+        system "stty echo"
+        print "\n"
       
-      print "Type the path to the site's folder (e.g. /public_html ): "
-      ftp['remote_root_dir'] = Shell::Input.text
+        print "Type the path to the site's folder (e.g. /public_html ): "
+        ftp['remote_root_dir'] = Shell::Input.text
 
-      @config = { "ftp" => ftp }
+        @config = { "ftp" => ftp }
       
-    end # ask_ftp_info
+      end # ask_ftp_info
     
-    def help
-      puts "Initializes environment."
+      def help
+        puts "Initializes environment."
+      end
     end
-  
   end
 end

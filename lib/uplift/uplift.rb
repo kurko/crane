@@ -1,4 +1,5 @@
 require "net/ftp"
+require File.expand_path("../../shell/shell.rb", __FILE__)
 
 module Uplift
   
@@ -11,16 +12,15 @@ module Uplift
     # options
     
     def initialize argv
-      
-      require Uplift::UPLIFT_FOLDER+"lib/uplift/ftp.rb"
+      return true if TESTING
+      require File.expand_path("../ftp.rb", __FILE__)
       
       super argv
-      @command
       @config = load_config
       @ignored_files = get_ignored_files
-      @local_files = Array.new
+      @local_files = []
       
-      @errors = Array.new
+      @errors = []
       
       # has_compulsory_config?
       
@@ -31,6 +31,7 @@ module Uplift
         help
         exit
       end
+      
       
       run
     end
@@ -81,7 +82,7 @@ module Uplift
     
     # loads the config file and returns
     def load_config
-      config = Hash.new
+      config = {}
       
       if File.exists? ".uplift_config" then
         cfile = File.open '.uplift_config', 'r'
@@ -161,14 +162,8 @@ module Uplift
     end # generates_config_syntax
     
     def get_ignored_files
-      ignored_files = Array.new
-      
-      config_file = File.open Uplift::UPLIFT_FOLDER+"config/ignore_files", "r"
-      config_file.each do |l|
-         ignored_files.push l.strip
-      end
-      
-      ignored_files
+      require File.expand_path("../config.rb", __FILE__);
+      Config::IGNORE_FILES || []
     end
     
     def help
