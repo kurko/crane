@@ -1,8 +1,11 @@
 require File.expand_path("../../uplift.rb", __FILE__)
+require File.expand_path("../../config.rb", __FILE__)
 
 module Uplift
   module Commands
     class Test < Uplift::Engine
+      
+      include Config
 
       def run
         puts "Starting tests:"
@@ -39,46 +42,13 @@ module Uplift
       
       end
     
-      def config_has_file?
-        File.exists? ".uplift_config"
+      def has_config_file?
+        File.exists? Config.PATH
       end
   
       def has_ftp_connection?
-        require "net/ftp"
-        require 'timeout'
-        result = true
-      
-        if @connection.nil? then
-          host = @config['ftp']['host_address']
-          username = @config['ftp']['username']
-          password = @config['ftp']['password']
-          @connection = Net::FTP.new
-          begin
-            Timeout.timeout(4) do
-              @connection.connect host, 21
-            end
-          rescue
-            @connection_error = "couldn't connect to host"
-            result = false
-          end
-        
-          begin
-            Timeout.timeout(4) do
-              @connection.login username, password
-            end
-          rescue
-            @connection_error = "invalid username/password"
-            result = false
-          end
-        
-        end
-      
-        if @connection.nil?
-          result = false
-        end
-      
-        result
-        
+        require 'uplift/ftp'
+        Uplift::Ftp.new
       end # has_ftp_connection
     
       # Tries out the remote dir

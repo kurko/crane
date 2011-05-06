@@ -1,0 +1,5 @@
+[ftp]
+host_address = host_address
+username = username
+password = password
+remote_root_dir = /public_html

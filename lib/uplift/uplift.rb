@@ -11,7 +11,7 @@ module Uplift
     # @command
     # options
     
-    def initialize argv
+    def initialize argv = []
       return true if TESTING
       require File.expand_path("../ftp.rb", __FILE__)
       
@@ -32,8 +32,7 @@ module Uplift
         exit
       end
       
-      
-      run
+      run unless TESTING
     end
     
     # return an instance of a FTP connection
@@ -119,47 +118,6 @@ module Uplift
       @config = config
       @config
     end #load_config
-    
-    # saves configurations to file
-    def save_config
-      data = generates_config_syntax @config
-      unless data.empty? then
-        
-        # deletes configuration file to recreate
-        if File.exists? ".uplift_config"
-          File.delete ".uplift_config"
-        end
-        
-        cfile = File.open ".uplift_config", "w+"
-        data.each_line {
-          |l|
-          cfile.puts l
-        }
-        cfile.close
-        
-      end
-#      data
-      
-    end #save_config
-    
-    def generates_config_syntax config
-      data = ""
-      
-      config.each {
-        |key, value|
-        
-        # a new section
-        if value.class.to_s == "Hash" then
-          data << "[" + key.to_s + "]" + "\n"
-          data << generates_config_syntax(value).to_s
-        elsif value.class.to_s == "String"
-          data << key.to_s + " = " +value.to_s + "\n"
-        end
-      }
-      
-      data
-      
-    end # generates_config_syntax
     
     def get_ignored_files
       require File.expand_path("../config.rb", __FILE__);
