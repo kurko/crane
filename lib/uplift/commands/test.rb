@@ -1,5 +1,6 @@
 require File.expand_path("../../uplift.rb", __FILE__)
 require File.expand_path("../../config.rb", __FILE__)
+require 'uplift/ftp'
 
 module Uplift
   module Commands
@@ -11,10 +12,11 @@ module Uplift
         puts "Starting tests:"
       
         # has configuration file?
-        if config_has_file? then
+        if Config.has_config_file? then
           puts "\tConfiguration file: ok."
         else
           puts "\tConfiguration file: failed."
+          exit
         end
       
         # has connection?
@@ -32,46 +34,18 @@ module Uplift
           puts "\tFTP remote dir: failed => inexistent remote dir"
         end
       
-        puts
         if @errors == false then
           puts "Everything's ok."
         end
       
-        # can change dir?
-      
-      
       end
     
-      def has_config_file?
-        File.exists? Config.PATH
-      end
-  
       def has_ftp_connection?
-        require 'uplift/ftp'
         Uplift::Ftp.new
-      end # has_ftp_connection
+      end
     
-      # Tries out the remote dir
       def ftp_remote_dir?
-        result = true
-        require "net/ftp"
-        require "timeout"
-      
-        if @connection.nil? then
-          has_ftp_connection?
-        end
-      
-        begin
-          Timeout.timeout(10) do
-            @connection.chdir @config['ftp']['remote_root_dir']
-          end
-        rescue Timeout::Error
-          result = false
-        rescue Exception=>e
-          result = false
-        end
-      
-        result
+        Uplift::Ftp.new.remote_dir_exists?
       end
   
       def help

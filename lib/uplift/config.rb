@@ -16,7 +16,7 @@ module Config
   ]
   
   class << self
-    attr_accessor :PATH, :FILENAME, :IGNORE_FILES
+    attr_accessor :PATH, :FILENAME, :IGNORE_FILES, :CONFIG
   end
   
   def self.has_config_file?
@@ -27,12 +27,11 @@ module Config
     data = ""
     
     config.each { |key, value|
-      
       # a new section
       if value.class.to_s == "Hash" then
         data << "[" + key.to_s + "]" + "\n"
         data << self.make_config(value).to_s
-      elsif value.class.to_s == "String"
+      elsif ["String", "Symbol"].include? value.class.to_s
         data << key.to_s + " = " +value.to_s + "\n"
       end
     }
@@ -41,6 +40,7 @@ module Config
   end
   
   def self.save_config config
+    @CONFIG = config
     data = self.make_config config
     unless data.empty?
       # deletes configuration file to recreate
@@ -74,26 +74,27 @@ module Config
         
         unless maybe_section.empty? then
           unless (section.empty? and all_properties.empty? )
-            config[section] = all_properties
+            config[section.to_sym] = all_properties
             all_properties = ""
           end
           section = maybe_section
         else maybe_property.empty?
           l.scan(/(.*) = (.*)\n/) {
             |property, value|
-            all_properties[property.to_s] = value.to_s
+            all_properties[property.to_sym] = value.to_s
           }
         end
         
       }
       
       unless (section.empty? and all_properties.empty? )
-        config[section] = all_properties
+        config[section.to_sym] = all_properties
         all_properties = ""
       end
       
       cfile.close
     end
+    @CONFIG = config
     config
   end
   

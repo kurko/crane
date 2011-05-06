@@ -7,38 +7,64 @@ module Uplift
     
     attr_accessor :ftp, :connection_error
     
-    def initialize c = {}
+    def initialize c = false
       @ftp = nil
-      connect(c) unless c.empty?
+      unless c
+        config = Config.load_config
+        unless config.empty?
+          c = {}
+          c[:ftp] = config[:ftp] unless config[:ftp].empty?
+        end
+      end
+      connect(c) if c
     end
     
     def connect c = {}
       port = c[:port] || 21
-
+      c = c[:ftp] if c.include? :ftp
+        
+      @connection_error = false
       @ftp = Net::FTP.new
       @ftp.passive = true
       begin
         Timeout.timeout(10) do
           @ftp.connect c[:host], port
         end
+      rescue Timeout::Error
+        @connection_error = "Timeout on connection"
       rescue
-        @connection_error = "Couldn't connect to host"
+        @connection_error = $!
       end
       
       begin
-        Timeout.timeout(10) do
+        Timeout.timeout(20) do
           @ftp.login c[:username], c[:password]
         end
-      rescue
+      rescue Timeout::Error
+        @connection_error = "Timeout on authentication (20 seconds)"
+      rescue Net::FTPPermError
         @connection_error = "Invalid username/password"
+      rescue 
+        @connection_error = "Unknown error related to username/password"
       end
 
       return false if @connection_error
       @ftp      
     end
+
+    def remote_dir_exists? remote_dir = false
+      return nil if Config.load_config.empty?
+      connect(Config.CONFIG[:ftp]) if @ftp.nil?
+      
+      begin
+        Timeout.timeout(10) do
+          @ftp.chdir(remote_dir || Config.CONFIG[:ftp][:remote_root_dir])
+        end
+      rescue 
+        return false
+      end
     
-    def method_missing name_symbol, *params
-    #  @ftp.name_symbol(params)
+      true
     end
     
     def putbinaryfile f, f2
@@ -46,7 +72,6 @@ module Uplift
     end
     
     def chdir var
-      #puts var
       @ftp.chdir var
     end
     

@@ -7,11 +7,11 @@ class TestConfig < Test::Unit::TestCase
     Config.PATH = File.expand_path("../../../resources/configurations/.uplift", __FILE__)
     
     @config = {}
-    @config['ftp'] = {
-      'host_address' => 'host_address',
-      'username' => 'username',
-      'password' => 'password',
-      'remote_root_dir' => '/public_html'
+    @config[:ftp] = {
+      :host => 'host_address',
+      :username => 'username',
+      :password => 'password',
+      :remote_root_dir => '/public_html'
     }
     
   end
@@ -43,7 +43,7 @@ class TestConfig < Test::Unit::TestCase
   def test_make_config
     syntax = Config.make_config @config
     assert syntax =~ /^\[ftp\]\n/
-    assert syntax =~ /^host_address = host_address\n/
+    assert syntax =~ /^host = host_address\n/
     assert syntax =~ /^username = username\n/
     assert syntax =~ /^password = password\n/
     assert syntax =~ /^remote_root_dir = \/public_html\n/
@@ -52,18 +52,19 @@ class TestConfig < Test::Unit::TestCase
   def test_save_config
     Config.PATH = File.expand_path("../../../resources/configurations/.uplift_temp", __FILE__)
     assert Config.save_config @config
+    assert_equal Config.CONFIG, @config
     assert File.exists?(Config.PATH), "It seems the file was not saved"
     
     config = File.open(Config.PATH, "r").read
     assert config =~ /^\[ftp\]\n/
-    assert config =~ /^host_address = host_address\n/
+    assert config =~ /^host = host_address\n/
     assert config =~ /^username = username\n/
     assert config =~ /^password = password\n/
     assert config =~ /^remote_root_dir = \/public_html\n/
 
     assert !(config =~ /^\[\[ftp\]\]\n/)
     
-#    File.delete Config.PATH
+    File.delete Config.PATH
   end
   
   def test_load_config
@@ -72,12 +73,29 @@ class TestConfig < Test::Unit::TestCase
     assert File.exists?(Config.PATH), "It seems the file was not saved"
     
     config = Config.load_config
+    assert_equal Config.CONFIG, @config
+    assert_equal Config.CONFIG, config
     assert_equal Hash, config.class
-    assert_equal "ftp", config.keys[0]
-    assert_equal "host_address", config["ftp"]["host_address"]
-    assert_equal "username", config["ftp"]["username"]
-    assert_equal "password", config["ftp"]["password"]
-    assert_equal "/public_html", config["ftp"]["remote_root_dir"]
+    assert_equal :ftp, config.keys[0]
+    assert_equal "host_address", config[:ftp][:host]
+    assert_equal "username", config[:ftp][:username]
+    assert_equal "password", config[:ftp][:password]
+    assert_equal "/public_html", config[:ftp][:remote_root_dir]
+
+    File.delete Config.PATH
+  end
+
+  def test_load_config
+    Config.PATH = File.expand_path("../../../resources/configurations/.uplift", __FILE__)
+    assert File.exists?(Config.PATH), "It seems the file doesn't exist"
+    
+    config = Config.load_config
+    assert_equal Config.CONFIG, config
+    assert_equal Hash, config.class
+    assert_equal :ftp, config.keys[0]
+    assert_equal "ftp.secureftp-test.com", config[:ftp][:host]
+    assert_equal "test", config[:ftp][:username]
+    assert_equal "test", config[:ftp][:password]
   end
 
 end

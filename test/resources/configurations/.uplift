@@ -1,1 +1,5 @@
-LOL
+[ftp]
+host = ftp.secureftp-test.com
+username = test
+password = test
+remote_root_dir = /subdir2

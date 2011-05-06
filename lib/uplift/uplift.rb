@@ -1,4 +1,5 @@
 require "net/ftp"
+require "uplift/config"
 require File.expand_path("../../shell/shell.rb", __FILE__)
 
 module Uplift
@@ -7,16 +8,17 @@ module Uplift
   
   class Engine < Shell::Run
     
+    include Config
     # @argv
     # @command
     # options
     
     def initialize argv = []
-      return true if TESTING
+      return true if defined? TESTING
       require File.expand_path("../ftp.rb", __FILE__)
       
       super argv
-      @config = load_config
+      @config = Config.load_config
       @ignored_files = get_ignored_files
       @local_files = []
       
@@ -32,7 +34,7 @@ module Uplift
         exit
       end
       
-      run unless TESTING
+      run unless defined? TESTING
     end
     
     # return an instance of a FTP connection
@@ -79,49 +81,9 @@ module Uplift
       Shell::Parser.is_option option, @argv
     end
     
-    # loads the config file and returns
-    def load_config
-      config = {}
-      
-      if File.exists? ".uplift_config" then
-        cfile = File.open '.uplift_config', 'r'
-        section = ""
-        all_properties = Hash.new
-        cfile.each {
-          |l|
-          maybe_section = l.scan(/\[(.*)\]\n/)
-          maybe_property = l.scan(/(.*)=(.*)\n/)
-          
-          unless maybe_section.empty? then
-            unless (section.empty? and all_properties.empty? )
-              config[section] = all_properties
-              all_properties = ""
-            end
-            section = maybe_section.to_s
-          else maybe_property.empty?
-            l.scan(/(.*) = (.*)\n/) {
-              |property, value|
-              all_properties[property.to_s] = value.to_s
-            }
-          end
-          
-        }
-        
-        unless (section.empty? and all_properties.empty? )
-          config[section] = all_properties
-          all_properties = ""
-        end
-        
-        cfile.close
-      end
-      
-      @config = config
-      @config
-    end #load_config
-    
     def get_ignored_files
       require File.expand_path("../config.rb", __FILE__);
-      Config::IGNORE_FILES || []
+      Config.IGNORE_FILES || []
     end
     
     def help
