@@ -75,6 +75,7 @@ module Shell
     end
     
     def self.get_options argv
+      return [] if argv.nil?
       @options = []
       @sanitized_options = []
       
@@ -114,7 +115,7 @@ module Shell
       @arguments
     end
     
-    def self.is_option option, argv = Array.new
+    def self.is_option option, argv = []
       argv_options = self.get_options argv
       argv_options.include?(option)
     end

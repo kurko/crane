@@ -5,7 +5,7 @@ require "uplift/config"
 class TestFtp < Test::Unit::TestCase
 
   def setup
-    Config.PATH = "./.uplift"
+    Config.PATH = "./.inexistent_uplift"
     @obj = nil
     @ftp_auth = { 
       :host => "ftp.secureftp-test.com", 
@@ -22,7 +22,7 @@ class TestFtp < Test::Unit::TestCase
   def test_new_ftp
     @obj = Uplift::Ftp.new
     assert_equal Uplift::Ftp, @obj.class
-    assert @obj.ftp.nil?
+    assert @obj.ftp.nil?, @obj.ftp.inspect
   end
 
   def test_connect_on_instantiation
