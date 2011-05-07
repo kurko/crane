@@ -1,33 +1,51 @@
-Rubylift is an app that will syncronize files by FTP, getting the bore out of your
-path :-)
+What?
+====
 
-How boring is it to send files through FTP? What about the moment you have to send
-just a couple of files, not the whole directories? This is very annoying,
-specially for freelancers.
+Uplift is a Ruby gem for sending files through FTP without the hassle of clicking directory by directory
+and sendind file by file. It gets the bore out of your path :-)
 
-Rubylift will take care of the files for you. All you have to do is type:
+Why?
+====
 
-$ ./uplift push
+We have projects in servers that, for particular reasons, can't access Github or a git repo, so
+Capistrano can't be used for deploying.
 
-If you want to send only the files modified today, try:
+Most of them are small clients that demand basic designs, no
+dynamic programming, usually on shared hosting. After tiny changes, HTML, CSS and image
+files are sent via FTP. This is very boring.
 
-$ ./uplift push today
+How?
+====
 
-Uplift will upload only the files you want.
+Uplift analyses files in the current directory by date. Let's say you type:
 
+<pre>
+	$ uplift push today
+</pre>
 
-HOW TO START USING UPLIFT?
+Uplift will send all files changed *today* to the server. Automatically.
 
-First, you have to have Ruby installed. It depends on your OS.
+Better yet, try this:
 
-Then, get a copy of Uplift and put it into your project's folder. Now you need to configure your
-project, however Uplift provides an easy way to do that. Type:
+<pre>
+	$ uplift push 1h
+</pre>
 
-$ ./uplift init
+This will send all files modified in the last hour.
 
-Answer those questions and whenever you need to know if everything is alright, type:
+How to start
+====
 
-$ ./uplift test
+Get into your project root directory and type:
 
-Uplift won't look up for git files (.git directory and .gitignore), nor its own files. So you
-can put it into your projects folder.
+<pre>
+	$ uplift init
+</pre>
+
+This will inquire you about FTP informations. This configuration will be saved in a file
+called .uplift in the same folder.
+
+License
+====
+
+MIT. Do whatever you want. Want a suggestion? Fork and collaborate.
