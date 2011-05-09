@@ -1,0 +1,5 @@
+[ftp]
+host = ftp.secureftp-test.com
+username = test
+password = test
+remote_root_dir = /inexistent_dir

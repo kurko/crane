@@ -16,7 +16,7 @@ module Uplift
         ftp = {}
       
         print "Your FTP host address (e.g. ftp.mysite.com.br): "
-        ftp[:host_address] = Shell::Input.text
+        ftp[:host] = Shell::Input.text
       
         print "FTP username: "
         ftp[:username] = Shell::Input.text

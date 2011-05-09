@@ -5,10 +5,12 @@ module Uplift
 
   class Ftp
     
-    attr_accessor :ftp, :connection_error
+    attr_accessor :connection, :connection_error
     
     def initialize c = false
-      @ftp = nil
+      @connection = nil
+      @existent_dirs = []
+      @nlst = {}
       unless c
         config = Config.load_config
         unless config.empty?
@@ -17,28 +19,31 @@ module Uplift
         end
       end
       connect(c) if c
+      self
     end
     
     def connect c = {}
       port = c[:port] || 21
       c = c[:ftp] if c.include? :ftp
-        
+      
+      return false unless c.has_key? :host
+
+      @connection = Net::FTP.new
       @connection_error = false
-      @ftp = Net::FTP.new
-      @ftp.passive = true
+      @connection.passive = true
       begin
         Timeout.timeout(10) do
-          @ftp.connect c[:host], port
+          @connection.connect c[:host], port
         end
       rescue Timeout::Error
         @connection_error = "Timeout on connection"
       rescue
-        @connection_error = $!
+        @connection_error = "Error on connection FTP"
       end
       
       begin
         Timeout.timeout(20) do
-          @ftp.login c[:username], c[:password]
+          @connection.login c[:username], c[:password]
         end
       rescue Timeout::Error
         @connection_error = "Timeout on authentication (20 seconds)"
@@ -49,71 +54,77 @@ module Uplift
       end
 
       return false if @connection_error
-      @ftp      
+      true  
     end
 
     def remote_dir_exists? remote_dir = false
       return nil if Config.load_config.empty?
-      connect(Config.CONFIG[:ftp]) if @ftp.nil?
+      connect(Config.CONFIG[:ftp]) if @connection.nil?
       
       begin
         Timeout.timeout(10) do
-          @ftp.chdir(remote_dir || Config.CONFIG[:ftp][:remote_root_dir])
+          @connection.chdir(remote_dir || Config.CONFIG[:ftp][:remote_root_dir])
         end
       rescue 
         return false
       end
-    
+      @connection.close
       true
     end
     
+    def close
+      @connection.close
+    end
+    
     def putbinaryfile f, f2
-      @ftp.putbinaryfile f, f2
+      @connection.putbinaryfile f, f2
     end
     
     def chdir var
-      @ftp.chdir var
+      @connection.chdir var
     end
     
-    # creates a directory. Accepts deep dir as parameter
+    # Accepts deep directories as parameter
     def mkdir dir
       each_dir = dir.split("/")
-      
-      if dir.empty? then
-        return false
-      end
-      
-      
-      pwd = @ftp.pwd
-      #puts pwd
+      return false if dir.empty?
       last_dir = ""
-      each_dir.each {
-        |d|
-        next if d == "" or d == "." or d == ".."
-        
-        is_dir = @ftp.nlst.include? d
-        
-        if d[0,1] != "/" then
-          d = "/" + d
-        end
-        
-        #puts "\t\t"+is_dir.inspect+ " -- " + d
-        
-        if is_dir then
-          @ftp.chdir last_dir+d
-          last_dir << d
-        else
-          @ftp.mkdir last_dir+d
-          last_dir << d
-        end
-        
-      }
-      @ftp.chdir pwd
       
+      each_dir.each { |d|
+        next if ["", ".", ".."].include? d
+      
+        slashed_d = "/" + d if d[0,1] != "/"
+        current_dir = last_dir + slashed_d
+
+        if @existent_dirs.include? current_dir
+          last_dir << slashed_d
+          next
+        else
+          @connection.chdir last_dir unless last_dir.empty?
+          
+          if @nlst.include? last_dir
+            nlst = @nlst[last_dir]
+          else
+            nlst = @connection.nlst
+          end
+          @nlst[last_dir] = nlst
+          if nlst.include? d
+            @existent_dirs << current_dir
+            last_dir << slashed_d
+            next
+          else
+            @connection.mkdir d
+            @connection.chdir current_dir
+            last_dir << slashed_d
+            @existent_dirs << current_dir
+          end
+        end
+      }
+      @connection.chdir pwd
     end
     
     def pwd
-      @ftp.pwd
+      @connection.pwd
     end
     
     private

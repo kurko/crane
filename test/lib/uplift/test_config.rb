@@ -4,7 +4,7 @@ require "uplift/config"
 class TestConfig < Test::Unit::TestCase
 
   def setup
-    Config.PATH = File.expand_path("../../../resources/configurations/.uplift", __FILE__)
+    Config.PATH = File.expand_path("../../../resources/configurations/uplift", __FILE__)
     
     @config = {}
     @config[:ftp] = {
@@ -86,7 +86,6 @@ class TestConfig < Test::Unit::TestCase
   end
 
   def test_load_config
-    Config.PATH = File.expand_path("../../../resources/configurations/.uplift", __FILE__)
     assert File.exists?(Config.PATH), "It seems the file doesn't exist"
     
     config = Config.load_config

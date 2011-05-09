@@ -23,7 +23,7 @@ module Uplift
         if has_ftp_connection? then
           puts "\tFTP connection: ok."
         else
-          puts "\tFTP connection: failed => " + @connection_error
+          puts "\tFTP connection: failed"
           exit
         end
       
@@ -37,15 +37,19 @@ module Uplift
         if @errors == false then
           puts "Everything's ok."
         end
-      
       end
     
       def has_ftp_connection?
-        Uplift::Ftp.new
+        @ftp = Uplift::Ftp.new
+        return false if @ftp.connection.nil?
+        if @ftp.connection.respond_to?("closed?")
+          !@ftp.connection.closed?
+        end
       end
     
       def ftp_remote_dir?
-        Uplift::Ftp.new.remote_dir_exists?
+        @ftp = Uplift::Ftp.new if @ftp.nil?
+        @ftp.remote_dir_exists?
       end
   
       def help

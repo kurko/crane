@@ -4,8 +4,6 @@ require File.expand_path("../../shell/shell.rb", __FILE__)
 
 module Uplift
   
-  UPLIFT_FOLDER = "uplifting/"
-  
   class Engine < Shell::Run
     
     include Config
@@ -18,6 +16,7 @@ module Uplift
       require File.expand_path("../ftp.rb", __FILE__)
       
       super argv
+      @ftp = nil
       @config = Config.load_config
       @ignored_files = get_ignored_files
       @local_files = []

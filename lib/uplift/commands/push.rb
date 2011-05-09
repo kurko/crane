@@ -10,9 +10,10 @@ module Uplift
       @ignored_files = []
       
       def run
-      
-        @local_files = get_files
-      
+
+        time_frame = Shell::Parser.get_arguments(@argv).first
+        @local_files = get_files time_frame
+
         if @local_files.length == 0 then
           puts "No files were found."
           exit
@@ -21,47 +22,46 @@ module Uplift
         else
           do_push_files = Shell::Input.yesno "Push "+@local_files.length.to_s+" files to the server? [Y/n]"
         end
-        puts @local_files
-        unless do_push_files
-          exit
-        end
+
+        exit unless do_push_files
       
-        print "Connecting to host... "
+        print "\nConnecting to host... "
       
-        ftp = connect_ftp
+        ftp = Uplift::Ftp.new
         if ftp == false then
           puts "ops, an error ocurred."
           exit
         else
           puts "connected. Started sending files..."
         end
-      
-#        push_files ftp
-      
-      end # run
-    
-      def push_files ftp
-      
-        ftp = Uplift::Ftp.new :host => @config['ftp']['host_address'],
-                             :username => @config['ftp']['username'],
-                             :password => @config['ftp']['password']
-      
-        prefix_dir = @config['ftp']['remote_root_dir']
-        unless prefix_dir[ prefix_dir.length-1,1 ] == "/" then
-          prefix_dir << "/"
+        
+        begin
+          push_files ftp
+        rescue
+          puts "And unknown error has ocurred."
         end
       
+      end
+    
+      def push_files ftp
+        
+        prefix_dir = @config[:ftp][:remote_root_dir]
+        prefix_dir << "/" unless prefix_dir[ prefix_dir.length-1,1 ] == "/"
+        
         @local_files.each { |f|
           st_mk = Time.new
         
-          dir = prefix_dir+File.dirname(f)
-          ftp.mkdir dir
-        
+          dir = prefix_dir
+          unless [".", ".."].include? File.dirname(f)
+            dir = prefix_dir + File.dirname(f)
+            ftp.mkdir dir
+          end
+          
           st_end = Time.new
           t = st_end-st_mk
           print ">> mkdir: "+ '%.2f' % t.inspect
         
-          pwd = ftp.pwd
+          pwd = ftp.connection.pwd
           ftp.chdir dir
           st_put = Time.new
         
@@ -76,10 +76,9 @@ module Uplift
           print "\n"
         
           STDOUT.flush
-          ftp.chdir pwd
+          ftp.connection.chdir pwd
         }
-        puts ""
-
+        puts "Done!"
       end
     
       # if user defines a time interval for the file, check if it complies
@@ -95,6 +94,8 @@ module Uplift
         elsif time_frame =~ /^[1-9]h$/
           seconds = time_frame[/[1-9]/].to_i * (60 * 60)
           return true if file_time > (time - seconds)
+        elsif time_frame == "all"
+          return true
         end
         false
       end

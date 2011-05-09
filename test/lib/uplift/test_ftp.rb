@@ -22,27 +22,27 @@ class TestFtp < Test::Unit::TestCase
   def test_new_ftp
     @obj = Uplift::Ftp.new
     assert_equal Uplift::Ftp, @obj.class
-    assert @obj.ftp.nil?, @obj.ftp.inspect
+    assert @obj.connection.nil?, @obj.connection.inspect
   end
 
   def test_connect_on_instantiation
     @obj = Uplift::Ftp.new @ftp_auth
-    assert @obj.ftp.kind_of?(Net::FTP)
+    assert @obj.connection.kind_of?(Net::FTP)
   end
 
   def test_connect
     @obj = Uplift::Ftp.new
     connection = @obj.connect(@ftp_auth)
     assert connection
-    assert @obj.ftp.kind_of?(Net::FTP)
+    assert @obj.connection.kind_of?(Net::FTP)
   end
 
   def test_connect_autoloading_config_info
-    Config.PATH = File.expand_path("../../../resources/configurations/.uplift", __FILE__)
+    Config.PATH = File.expand_path("../../../resources/configurations/uplift", __FILE__)
     @obj = Uplift::Ftp.new
-    connection = @obj.ftp
+    connection = @obj.connection
     assert connection
-    assert @obj.ftp.kind_of?(Net::FTP)
+    assert @obj.connection.kind_of?(Net::FTP)
     
     assert @obj.connect(Config.load_config)
   end
@@ -54,15 +54,15 @@ class TestFtp < Test::Unit::TestCase
   end
   
   def test_remote_dir
-    Config.PATH = File.expand_path("../../../resources/configurations/.uplift", __FILE__)
+    Config.PATH = File.expand_path("../../../resources/configurations/uplift", __FILE__)
     @obj = Uplift::Ftp.new
     assert @obj.remote_dir_exists?
   end
 
   def test_inexistent_remote_dir
-    Config.PATH = File.expand_path("../../../resources/configurations/.uplift", __FILE__)
+    Config.PATH = File.expand_path("../../../resources/configurations/uplift", __FILE__)
     @obj = Uplift::Ftp.new
     assert !@obj.remote_dir_exists?("harhar")
   end
-
+  
 end
