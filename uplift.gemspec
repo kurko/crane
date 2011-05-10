@@ -9,8 +9,11 @@ Gem::Specification.new do |s|
   s.authors     = ["Alexandre de Oliveira"]
   s.email       = ["chavedomundo@gmail.com"]
   s.homepage    = "http://github.com/kurko/uplift"
-  s.summary     = %q{text.}
-  s.description = %q{text.}
+  s.summary     = %q{Send files via FTP automatically.}
+  s.description = %q{This gem allows you to easily send files from your project to a remote
+    server via FTP. Designers and interface programmers can have great benefit
+    from this, for they can easily send all last modified files without needing
+    an specific application for that nor searching directories by hand.}
 
   s.rubyforge_project = "uplift"
 
