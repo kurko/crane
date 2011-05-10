@@ -10,23 +10,22 @@ module Uplift
       @ignored_files = []
       
       def run
-
         time_frame = Shell::Parser.get_arguments(@argv).first
         @local_files = get_files time_frame
 
-        if @local_files.length == 0 then
+        if @local_files.length == 0
           puts "No files were found."
           exit
-        elsif @local_files.length == 1 then
+        elsif @local_files.length == 1
           do_push_files = Shell::Input.yesno "Push 1 file to the server? [Y/n]"
         else
           do_push_files = Shell::Input.yesno "Push "+@local_files.length.to_s+" files to the server? [Y/n]"
         end
 
         exit unless do_push_files
-      
+  
         print "\nConnecting to host... "
-      
+  
         ftp = Uplift::Ftp.new
         if ftp == false then
           puts "ops, an error ocurred."
@@ -34,13 +33,8 @@ module Uplift
         else
           puts "connected. Started sending files..."
         end
-        
-        begin
-          push_files ftp
-        rescue
-          puts "And unknown error has ocurred."
-        end
-      
+
+        push_files ftp
       end
     
       def push_files ftp

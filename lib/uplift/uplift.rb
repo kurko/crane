@@ -33,7 +33,13 @@ module Uplift
         exit
       end
       
-      run unless defined? TESTING
+      begin
+        run unless defined? TESTING
+      rescue Interrupt
+        puts "\n"
+      rescue
+        
+      end
     end
     
     # return an instance of a FTP connection
