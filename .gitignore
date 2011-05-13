@@ -1,5 +1,5 @@
 .loadpath
 .project
 .nbproject
-.uplift_config
-.uplift
+.crane_config
+.crane
