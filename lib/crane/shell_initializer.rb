@@ -1,6 +1,6 @@
 require "shell/shell"
-require "uplift"
-require "uplift/uplift"
+require "crane"
+require "crane/crane"
 
 module Shell
   class Initializer
@@ -44,7 +44,7 @@ module Shell
       command = @command unless command
       require get_command_file(command)
       command = command.capitalize
-      @command_obj = Uplift::Commands.const_get(command).new(@args)
+      @command_obj = Crane::Commands.const_get(command).new(@args)
     end
   end
 end

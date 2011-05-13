@@ -1,18 +1,18 @@
 require "test/unit"
-require "uplift/commands/push"
+require "crane/commands/push"
 require File.expand_path("../../../../set_test_environment.rb", __FILE__)
 
 class TestPushCommand < Test::Unit::TestCase
   
   def setup
-    unless File.exists?(File.expand_path("../../../../.uplift", __FILE__))
-      Config.PATH = File.expand_path("../../../resources/configurations/uplift", __FILE__)
+    unless File.exists?(File.expand_path("../../../../.crane", __FILE__))
+      Config.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
     end
     
     @lab_file = "test/resources/source_codes/today_file.rb"
     @lab_file_absolute = File.expand_path("../../../../resources/source_codes/today_file.rb", __FILE__)
     
-    @obj = Uplift::Commands::Push.new
+    @obj = Crane::Commands::Push.new
   end
   
   def test_get_todays_files

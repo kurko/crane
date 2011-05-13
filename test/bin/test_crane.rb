@@ -1,16 +1,15 @@
 require "test/unit"
-# require File.expand_path("../../set_test_environment.rb", __FILE__)
 $:.unshift File.expand_path('../../../lib/', __FILE__)
-require "uplift/shell_initializer"
+require "crane/shell_initializer"
 
-class TestUplift < Test::Unit::TestCase
+class TestCrane < Test::Unit::TestCase
   
   def test_push_listing_files
     
     today_file = File.expand_path('../../resources/source_codes/today_file.rb', __FILE__)
     `touch #{today_file}`
     begin
-      output = `echo "n" | ruby bin/uplift push today -list`
+      output = `echo "n" | ruby bin/crane push today -list`
     rescue SystemExit
     end
 

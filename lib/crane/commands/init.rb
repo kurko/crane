@@ -1,10 +1,10 @@
-require File.expand_path("../../uplift.rb", __FILE__)
+require File.expand_path("../../crane.rb", __FILE__)
 require File.expand_path("../../config.rb", __FILE__)
-require 'uplift/ftp'
+require 'crane/ftp'
 
-module Uplift
+module Crane
   module Commands
-    class Init < Uplift::Engine
+    class Init < Crane::Engine
 
       def run
         @config = Config.load_config

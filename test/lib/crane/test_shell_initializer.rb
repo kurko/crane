@@ -1,5 +1,5 @@
 require "test/unit"
-require "uplift/shell_initializer"
+require "crane/shell_initializer"
 require File.expand_path("../../../set_test_environment.rb", __FILE__)
 
 class TestShellInitializer < Test::Unit::TestCase
@@ -30,20 +30,20 @@ class TestShellInitializer < Test::Unit::TestCase
     @obj = Shell::Initializer.new([])
     @obj.command = "init"
     assert_equal(
-      File.expand_path("../../../../lib/uplift/commands/init.rb", __FILE__),
+      File.expand_path("../../../../lib/crane/commands/init.rb", __FILE__),
       @obj.get_command_file )
   end
   
   def test_load_command
-    require File.expand_path("../../../../lib/uplift/commands/init.rb", __FILE__)
+    require File.expand_path("../../../../lib/crane/commands/init.rb", __FILE__)
     @obj = Shell::Initializer.new([])
-    assert_equal Uplift::Commands::Init, @obj.run_command("init", []).class
+    assert_equal Crane::Commands::Init, @obj.run_command("init", []).class
   end
   
   def test_run
-    require File.expand_path("../../../../lib/uplift/commands/init.rb", __FILE__)
+    require File.expand_path("../../../../lib/crane/commands/init.rb", __FILE__)
     @obj = Shell::Initializer.new([])
     @obj.command = "init"
-    assert_equal Uplift::Commands::Init, @obj.run.class
+    assert_equal Crane::Commands::Init, @obj.run.class
   end
 end

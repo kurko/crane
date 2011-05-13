@@ -1,7 +1,7 @@
 require "net/ftp"
 require 'timeout'
 
-module Uplift
+module Crane
 
   class Ftp
     

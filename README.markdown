@@ -1,7 +1,7 @@
 What?
 ====
 
-Uplift is a Ruby gem for sending files through FTP without the hassle of clicking directory by directory
+Crane is a Ruby gem for sending files through FTP without the hassle of clicking directory by directory
 and sendind file by file. It gets the bore out of your path :-)
 
 Why?
@@ -17,18 +17,18 @@ files are sent via FTP. This is very boring.
 How?
 ====
 
-Uplift analyses files in the current directory by date. Let's say you type:
+Crane analyses files in the current directory by date. Let's say you type:
 
 <pre>
-	$ uplift push today
+	$ crane push today
 </pre>
 
-Uplift will send all files changed *today* to the server. Automatically.
+Crane will send all files changed *today* to the server. Automatically.
 
 Better yet, try this:
 
 <pre>
-	$ uplift push 1h
+	$ crane push 1h
 </pre>
 
 This will send all files modified in the last hour.
@@ -39,11 +39,11 @@ How to start
 Get into your project root directory and type:
 
 <pre>
-	$ uplift init
+	$ crane init
 </pre>
 
 This will inquire you about FTP informations. This configuration will be saved in a file
-called .uplift in the same folder.
+called .crane in the same folder.
 
 License
 ====

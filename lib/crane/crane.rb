@@ -1,8 +1,8 @@
 require "net/ftp"
-require "uplift/config"
+require "crane/config"
 require File.expand_path("../../shell/shell.rb", __FILE__)
 
-module Uplift
+module Crane
   
   class Engine < Shell::Run
     

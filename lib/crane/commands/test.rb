@@ -1,10 +1,10 @@
-require File.expand_path("../../uplift.rb", __FILE__)
+require File.expand_path("../../crane.rb", __FILE__)
 require File.expand_path("../../config.rb", __FILE__)
-require 'uplift/ftp'
+require 'crane/ftp'
 
-module Uplift
+module Crane
   module Commands
-    class Test < Uplift::Engine
+    class Test < Crane::Engine
       
       include Config
 
@@ -40,7 +40,7 @@ module Uplift
       end
     
       def has_ftp_connection?
-        @ftp = Uplift::Ftp.new
+        @ftp = Crane::Ftp.new
         return false if @ftp.connection.nil?
         if @ftp.connection.respond_to?("closed?")
           !@ftp.connection.closed?
@@ -48,7 +48,7 @@ module Uplift
       end
     
       def ftp_remote_dir?
-        @ftp = Uplift::Ftp.new if @ftp.nil?
+        @ftp = Crane::Ftp.new if @ftp.nil?
         @ftp.remote_dir_exists?
       end
   

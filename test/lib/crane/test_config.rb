@@ -1,10 +1,10 @@
 require "test/unit"
-require "uplift/config"
+require "crane/config"
 
 class TestConfig < Test::Unit::TestCase
 
   def setup
-    Config.PATH = File.expand_path("../../../resources/configurations/uplift", __FILE__)
+    Config.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
     
     @config = {}
     @config[:ftp] = {
@@ -21,9 +21,9 @@ class TestConfig < Test::Unit::TestCase
   end
   
   def test_has_ignore_files
-    assert Config.IGNORE_FILES.include? "uplift"
+    assert Config.IGNORE_FILES.include? "crane"
     assert Config.IGNORE_FILES.include? ".git"
-    assert Config.IGNORE_FILES.include? ".uplift_config"
+    assert Config.IGNORE_FILES.include? ".crane_config"
     assert Config.IGNORE_FILES.include? ".project"
     assert Config.IGNORE_FILES.include? "nb_project"
     assert Config.IGNORE_FILES.include? ".loadpath"
@@ -50,7 +50,7 @@ class TestConfig < Test::Unit::TestCase
   end
   
   def test_save_config
-    Config.PATH = File.expand_path("../../../resources/configurations/.uplift_temp", __FILE__)
+    Config.PATH = File.expand_path("../../../resources/configurations/.crane_temp", __FILE__)
     assert Config.save_config @config
     assert_equal Config.CONFIG, @config
     assert File.exists?(Config.PATH), "It seems the file was not saved"
@@ -68,7 +68,7 @@ class TestConfig < Test::Unit::TestCase
   end
   
   def test_load_config
-    Config.PATH = File.expand_path("../../../resources/configurations/.uplift_temp", __FILE__)
+    Config.PATH = File.expand_path("../../../resources/configurations/.crane_temp", __FILE__)
     assert Config.save_config @config
     assert File.exists?(Config.PATH), "It seems the file was not saved"
     

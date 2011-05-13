@@ -2,12 +2,12 @@ module Config
 
   @CONFIG = {}
   
-  @PATH = "./.uplift"
+  @PATH = "./.crane"
 
   @IGNORE_FILES = [
-    "uplift",
+    "crane",
     ".git",
-    ".uplift_config",
+    ".crane_config",
     ".project",
     "nb_project",
     ".loadpath",

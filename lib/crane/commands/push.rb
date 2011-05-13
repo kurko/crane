@@ -1,11 +1,11 @@
-require File.expand_path("../../uplift.rb", __FILE__)
+require File.expand_path("../../crane.rb", __FILE__)
 require File.expand_path("../../config.rb", __FILE__)
-require 'uplift/ftp'
+require 'crane/ftp'
 
-module Uplift
+module Crane
   module Commands
 
-    class Push < Uplift::Engine
+    class Push < Crane::Engine
       
       @ignored_files = []
       
@@ -26,7 +26,7 @@ module Uplift
   
         print "\nConnecting to host... "
   
-        ftp = Uplift::Ftp.new
+        ftp = Crane::Ftp.new
         if ftp == false then
           puts "ops, an error ocurred."
           exit
