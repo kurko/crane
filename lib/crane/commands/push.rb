@@ -11,6 +11,9 @@ module Crane
       
       def run
         time_frame = Shell::Parser.get_arguments(@argv).first
+
+        (puts "No config file found. Run 'crane init' to create one."; exit) unless Config.has_config_file?
+
         @local_files = get_files time_frame
 
         if @local_files.length == 0
@@ -53,7 +56,7 @@ module Crane
           
           st_end = Time.new
           t = st_end-st_mk
-          print ">> mkdir: "+ '%.2f' % t.inspect
+          print "."
         
           pwd = ftp.connection.pwd
           ftp.chdir dir
@@ -66,8 +69,7 @@ module Crane
           end
           st_putend = Time.new
           t = st_putend-st_put
-          print " >> putfile: "+ '%.2f' % t.inspect
-          print "\n"
+          print "."
         
           STDOUT.flush
           ftp.connection.chdir pwd
