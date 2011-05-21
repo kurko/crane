@@ -92,6 +92,8 @@ module Crane
           return true if file_time > (time - seconds)
         elsif time_frame == "all"
           return true
+        elsif time_frame == ""
+          true
         end
         false
       end
@@ -111,6 +113,7 @@ module Crane
           filename = File.basename file
         
           next if [".", ".."].include? filename
+          next if @ignored_files.include? filename
           next if @ignored_files.include? file
         
           if File.stat(file).directory? then
