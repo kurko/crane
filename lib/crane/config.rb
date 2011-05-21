@@ -5,15 +5,13 @@ module Config
   @PATH = "./.crane"
 
   @IGNORE_FILES = [
-    "crane",
-    ".git",
     ".DS_Store",
     ".crane",
-    ".crane_config",
     ".project",
     "nb_project",
     ".loadpath",
     ".gitignore",
+    ".git",
     ".gitmodules"
   ]
   

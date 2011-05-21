@@ -93,7 +93,7 @@ module Crane
         elsif time_frame == "all"
           return true
         end
-        false
+        true
       end
     
       def get_files time_frame = "", search_folder = ""
@@ -111,6 +111,7 @@ module Crane
           filename = File.basename file
         
           next if [".", ".."].include? filename
+          next if @ignored_files.include? filename
           next if @ignored_files.include? file
         
           if File.stat(file).directory? then
