@@ -116,7 +116,7 @@ module Crane
           if File.stat(file).directory? then
             local_files += get_files(time_frame, file+"/").flatten
           elsif within_defined_interval? file, time_frame
-            puts file if is_option "list"
+            puts file if is_option("list") || is_option("l")
             local_files.push file
           end
         }
@@ -124,7 +124,23 @@ module Crane
       end
     
       def help
-        puts "Send files to the server."
+        print "Usage:\n"
+        print "\s\scrane push [time_frame] [options]"
+        print "\n\n"
+        print "Time frame:"
+        print "\n"
+        print "\s\s1h\t\tAll files modified since 1h hour ago.\n"
+        print "\s\sxh\t\tAll files modified since xh hours ago (subtitute x by a number).\n"
+        print "\s\stoday\t\tAll files modified today.\n"
+        print "\s\syesterday\tAll files modified yesterday.\n"
+        print "\n"
+        print "If no time frame is set, Crane will parse all files."
+        print "\n\n"
+        print "Options:"
+        print "\n"
+        print "\s\s-l, --list\tList all files found in the set time frame."
+        print "\s\s-h, --help\tShow this help."
+        print "\n"
       end
   
     end

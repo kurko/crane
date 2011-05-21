@@ -10,7 +10,7 @@ module Shell
     def initialize argv
       @args = argv
       get_command
-      run if @command
+      run
     end
     
     def run
@@ -20,7 +20,7 @@ module Shell
           return run_command @command
         end
       end
-      false
+      inexistent_command
     end
     
     def should_exit?
@@ -42,9 +42,14 @@ module Shell
     
     def run_command command, args = []
       command = @command unless command
-      require get_command_file(command)
+      return inexistent_command unless command_exist?(command)
+      require get_command_file(command) 
       command = command.capitalize
       @command_obj = Crane::Commands.const_get(command).new(@args)
+    end
+    
+    def inexistent_command
+      @command_obj = Crane::Engine.new(@args)
     end
   end
 end
