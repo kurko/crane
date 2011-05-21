@@ -23,6 +23,8 @@ class TestConfig < Test::Unit::TestCase
   def test_has_ignore_files
     assert Config.IGNORE_FILES.include? "crane"
     assert Config.IGNORE_FILES.include? ".git"
+    assert Config.IGNORE_FILES.include? ".DS_Store"
+    assert Config.IGNORE_FILES.include? ".crane"
     assert Config.IGNORE_FILES.include? ".crane_config"
     assert Config.IGNORE_FILES.include? ".project"
     assert Config.IGNORE_FILES.include? "nb_project"
