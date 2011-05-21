@@ -19,6 +19,15 @@ module Config
     attr_accessor :PATH, :FILENAME, :IGNORE_FILES, :CONFIG
   end
   
+  def self.get_ignored_files
+    if File.exists? ".gitignore"
+      IO.readlines(".gitignore").each { |e|
+        @IGNORE_FILES.push e.gsub(/\n/, "")
+      }
+    end
+    @IGNORE_FILES
+  end
+  
   def self.has_config_file?
     File.exists? @PATH
   end

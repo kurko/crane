@@ -31,6 +31,11 @@ class TestConfig < Test::Unit::TestCase
     assert Config.IGNORE_FILES.include? ".gitmodules"
   end
   
+  def test_get_ignored_files_plus_gitignore
+    files = Config.get_ignored_files
+    assert files.include? ".crane"
+  end
+  
   def test_default_config_path
     Config.PATH = "./"
     assert_equal "./", Config.PATH

@@ -82,7 +82,7 @@ module Crane
     
     def get_ignored_files
       require File.expand_path("../config.rb", __FILE__);
-      Config.IGNORE_FILES || []
+      Config.get_ignored_files || []
     end
     
     def no_command
