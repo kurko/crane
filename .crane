@@ -1,0 +1,5 @@
+[ftp]
+host = ftp.acgrupo.com.br
+username = acgrupo1
+password = ftp2104
+remote_root_dir = /uplift_test

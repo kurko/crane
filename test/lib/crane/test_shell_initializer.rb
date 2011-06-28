@@ -24,6 +24,9 @@ class TestShellInitializer < Test::Unit::TestCase
   def test_command_does_no_exist
     @obj = Shell::Initializer.new(["zomg"])
     assert !@obj.command_exist?
+
+    assert_equal Crane::Engine, @obj.run_command("zomg", []).class
+
   end
   
   def test_command_file

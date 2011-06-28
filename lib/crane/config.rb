@@ -5,18 +5,27 @@ module Config
   @PATH = "./.crane"
 
   @IGNORE_FILES = [
-    "crane",
-    ".git",
-    ".crane_config",
+    ".DS_Store",
+    ".crane",
     ".project",
     "nb_project",
     ".loadpath",
     ".gitignore",
+    ".git",
     ".gitmodules"
   ]
   
   class << self
     attr_accessor :PATH, :FILENAME, :IGNORE_FILES, :CONFIG
+  end
+  
+  def self.get_ignored_files
+    if File.exists? ".gitignore"
+      IO.readlines(".gitignore").each { |e|
+        @IGNORE_FILES.push e.gsub(/\n/, "")
+      }
+    end
+    @IGNORE_FILES
   end
   
   def self.has_config_file?

@@ -22,16 +22,10 @@ module Crane
       @local_files = []
       
       @errors = []
-      
-      # has_compulsory_config?
-      
       @connection = nil
       
-      # shows help whenever it's called for
-      if Shell::Parser.is_option "help", @argv then
-        help
-        exit
-      end
+      (help; exit) if ["help", "h"].any? { |e| true if Shell::Parser.get_options(@argv).include? e }
+      (version; exit) if ["version", "v"].any? { |e| true if Shell::Parser.get_options(@argv).include? e }
       
       begin
         run unless defined? TESTING
@@ -88,11 +82,35 @@ module Crane
     
     def get_ignored_files
       require File.expand_path("../config.rb", __FILE__);
-      Config.IGNORE_FILES || []
+      Config.get_ignored_files || []
+    end
+    
+    def no_command
+      help
+    end
+        
+    def version
+      require "crane/version"
+      print "Crane v" + Crane::VERSION + "\n"
     end
     
     def help
-      true
+      print "Usage:\n"
+      print "\s\scrane COMMAND [options]"
+      print "\n\n"
+      print "Commands available:"
+      print "\n"
+      print "\s\spush\t\tSend files to a remote server"
+      print "\n\n"
+      print "Examples:"
+      print "\n"
+      print "\s\scrane push 1h"
+      print "\n"
+      print "\t\tPushes all files modified in the last hour.\n"
+      print "\n"
+      print "For more information, try:\n"
+      print "\s\scrane COMMAND -h"
+      print "\n"
     end
     
   end

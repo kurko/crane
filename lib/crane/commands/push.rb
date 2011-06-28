@@ -11,6 +11,9 @@ module Crane
       
       def run
         time_frame = Shell::Parser.get_arguments(@argv).first
+
+        (puts "No config file found. Run 'crane init' to create one."; exit) unless Config.has_config_file?
+
         @local_files = get_files time_frame
 
         if @local_files.length == 0
@@ -53,7 +56,7 @@ module Crane
           
           st_end = Time.new
           t = st_end-st_mk
-          print ">> mkdir: "+ '%.2f' % t.inspect
+          print "."
         
           pwd = ftp.connection.pwd
           ftp.chdir dir
@@ -66,8 +69,7 @@ module Crane
           end
           st_putend = Time.new
           t = st_putend-st_put
-          print " >> putfile: "+ '%.2f' % t.inspect
-          print "\n"
+          print "."
         
           STDOUT.flush
           ftp.connection.chdir pwd
@@ -91,7 +93,7 @@ module Crane
         elsif time_frame == "all"
           return true
         end
-        false
+        true
       end
     
       def get_files time_frame = "", search_folder = ""
@@ -109,12 +111,13 @@ module Crane
           filename = File.basename file
         
           next if [".", ".."].include? filename
+          next if @ignored_files.include? filename
           next if @ignored_files.include? file
         
           if File.stat(file).directory? then
             local_files += get_files(time_frame, file+"/").flatten
           elsif within_defined_interval? file, time_frame
-            puts file if is_option "list"
+            puts file if is_option("list") || is_option("l")
             local_files.push file
           end
         }
@@ -122,7 +125,23 @@ module Crane
       end
     
       def help
-        puts "Send files to the server."
+        print "Usage:\n"
+        print "\s\scrane push [time_frame] [options]"
+        print "\n\n"
+        print "Time frame:"
+        print "\n"
+        print "\s\s1h\t\tAll files modified since 1h hour ago.\n"
+        print "\s\sxh\t\tAll files modified since xh hours ago (subtitute x by a number).\n"
+        print "\s\stoday\t\tAll files modified today.\n"
+        print "\s\syesterday\tAll files modified yesterday.\n"
+        print "\n"
+        print "If no time frame is set, Crane will parse all files."
+        print "\n\n"
+        print "Options:"
+        print "\n"
+        print "\s\s-l, --list\tList all files found in the set time frame."
+        print "\s\s-h, --help\tShow this help."
+        print "\n"
       end
   
     end

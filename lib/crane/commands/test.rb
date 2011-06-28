@@ -12,7 +12,7 @@ module Crane
         puts "Starting tests:"
       
         # has configuration file?
-        if Config.has_config_file? then
+        if Config.has_config_file?
           puts "\tConfiguration file: ok."
         else
           puts "\tConfiguration file: failed."
@@ -20,7 +20,7 @@ module Crane
         end
       
         # has connection?
-        if has_ftp_connection? then
+        if has_ftp_connection?
           puts "\tFTP connection: ok."
         else
           puts "\tFTP connection: failed"
@@ -28,15 +28,13 @@ module Crane
         end
       
         # can change dir?
-        if ftp_remote_dir? then
+        if ftp_remote_dir?
           puts "\tFTP remote dir: ok."
         else
           puts "\tFTP remote dir: failed => inexistent remote dir"
         end
       
-        if @errors == false then
-          puts "Everything's ok."
-        end
+        puts "Everything's ok." if @errors == false
       end
     
       def has_ftp_connection?
