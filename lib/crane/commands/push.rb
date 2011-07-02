@@ -93,6 +93,8 @@ module Crane
         elsif time_frame == "all"
           return true
         end
+        
+        return false unless time_frame.empty?
         true
       end
     

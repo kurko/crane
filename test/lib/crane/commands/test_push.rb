@@ -16,9 +16,12 @@ class TestPushCommand < Test::Unit::TestCase
   end
   
   def test_get_todays_files
+    system "rm " + @lab_file_absolute
     system "touch -mt " + Time.new.strftime("%Y%m%d%H%M") + " " + @lab_file_absolute
+
     assert @obj.within_defined_interval?(@lab_file, "today")
-    assert !@obj.within_defined_interval?(@lab_file, "yesterday")
+    assert !@obj.within_defined_interval?(@lab_file, "yesterday"),
+      "shouldn't have a file from yesterday"
     assert @obj.within_defined_interval?(@lab_file, "1h")
     assert @obj.within_defined_interval?(@lab_file, "2h")
     assert @obj.within_defined_interval?(@lab_file, "3h")
