@@ -33,6 +33,19 @@ class TestPushCommand < Test::Unit::TestCase
     assert @obj.within_defined_interval?(@lab_file, "yesterday")
     assert !@obj.within_defined_interval?(@lab_file, "today")
   end
+
+  def test_get_files_from_minutes_ago
+    system "touch -mt " + (Time.new - (60 * 2)).strftime("%Y%m%d%H%M") + " " + @lab_file_absolute
+
+    assert @obj.within_defined_interval?(@lab_file, "3m")
+    assert !@obj.within_defined_interval?(@lab_file, "1m")
+
+    system "touch -mt " + (Time.new - (60 * 30)).strftime("%Y%m%d%H%M") + " " + @lab_file_absolute
+    assert @obj.within_defined_interval?(@lab_file, "32m")
+    assert !@obj.within_defined_interval?(@lab_file, "20m")
+
+
+  end
   
   def test_list_has_today_file
     system "touch -mt " + Time.new.strftime("%Y%m%d%H%M") + " " + @lab_file_absolute

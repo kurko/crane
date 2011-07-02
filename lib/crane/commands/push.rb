@@ -90,6 +90,9 @@ module Crane
         elsif time_frame =~ /^[1-9]h$/
           seconds = time_frame[/[1-9]/].to_i * (60 * 60)
           return true if file_time > (time - seconds)
+        elsif time_frame =~ /^[1-9]{1,999}m$/
+          seconds = time_frame[/[1-9]{1,999}/].to_i * (60)
+          return true if file_time > (time - seconds)
         elsif time_frame == "all"
           return true
         end
