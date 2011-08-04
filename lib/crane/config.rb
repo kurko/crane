@@ -12,7 +12,8 @@ module Config
     ".loadpath",
     ".gitignore",
     ".git",
-    ".gitmodules"
+    ".gitmodules",
+    ".svn"
   ]
   
   class << self
