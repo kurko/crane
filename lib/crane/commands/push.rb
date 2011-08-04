@@ -95,7 +95,7 @@ module Crane
         elsif time_frame == ""
           true
         end
-        false
+        true
       end
     
       def get_files time_frame = "", search_folder = ""

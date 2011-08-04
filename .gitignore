@@ -5,7 +5,5 @@ pkg/*
 .loadpath
 .project
 .nbproject
-.uplift_config
-.uplift
-.crane
 .crane_config
+.crane
