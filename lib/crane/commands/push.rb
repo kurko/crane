@@ -95,6 +95,8 @@ module Crane
           return true if file_time > (time - seconds)
         elsif time_frame == "all"
           return true
+        elsif time_frame == ""
+          true
         end
         
         return false unless time_frame.empty?
