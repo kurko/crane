@@ -6,7 +6,7 @@ module Crane
   
   class Engine < Shell::Run
     
-    include Config
+    include Configuration
     # @argv
     # @command
     # options
@@ -17,7 +17,7 @@ module Crane
       
       super argv
       @ftp = nil
-      @config = Config.load_config
+      @config = Configuration.load_config
       @ignored_files = get_ignored_files
       @local_files = []
       
@@ -82,7 +82,7 @@ module Crane
     
     def get_ignored_files
       require File.expand_path("../config.rb", __FILE__);
-      Config.get_ignored_files || []
+      Configuration.get_ignored_files || []
     end
     
     def no_command

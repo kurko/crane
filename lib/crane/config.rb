@@ -1,5 +1,4 @@
-module Config
-
+module Configuration
   @CONFIG = {}
   
   @PATH = "./.crane"
@@ -70,8 +69,8 @@ module Config
   def self.load_config
     config = {}
     
-    if File.exists? Config.PATH
-      cfile = File.open Config.PATH, 'r'
+    if File.exists? Configuration.PATH
+      cfile = File.open Configuration.PATH, 'r'
       
       section = ""
       

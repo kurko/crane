@@ -7,9 +7,9 @@ module Crane
     class Init < Crane::Engine
 
       def run
-        @config = Config.load_config
+        @config = Configuration.load_config
         ask_ftp_info
-        Config.save_config @config
+        Configuration.save_config @config
       end
     
       def ask_ftp_info

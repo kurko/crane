@@ -12,7 +12,7 @@ module Crane
       def run
         time_frame = Shell::Parser.get_arguments(@argv).first
 
-        (puts "No config file found. Run 'crane init' to create one."; exit) unless Config.has_config_file?
+        (puts "No config file found. Run 'crane init' to create one."; exit) unless Configuration.has_config_file?
 
         @local_files = get_files time_frame
 

@@ -5,7 +5,7 @@ require "crane/config"
 class TestFtp < Test::Unit::TestCase
 
   def setup
-    Config.PATH = "./.inexistent_crane"
+    Configuration.PATH = "./.inexistent_crane"
     @obj = nil
     @ftp_auth = { 
       :host => "ftp.secureftp-test.com", 
@@ -38,13 +38,13 @@ class TestFtp < Test::Unit::TestCase
   end
 
   def test_connect_autoloading_config_info
-    Config.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
+    Configuration.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
     @obj = Crane::Ftp.new
     connection = @obj.connection
     assert connection
     assert @obj.connection.kind_of?(Net::FTP)
     
-    assert @obj.connect(Config.load_config)
+    assert @obj.connect(Configuration.load_config)
   end
 
   def test_connect_with_wrong_password
@@ -54,13 +54,13 @@ class TestFtp < Test::Unit::TestCase
   end
   
   def test_remote_dir
-    Config.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
+    Configuration.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
     @obj = Crane::Ftp.new
     assert @obj.remote_dir_exists?
   end
 
   def test_inexistent_remote_dir
-    Config.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
+    Configuration.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
     @obj = Crane::Ftp.new
     assert !@obj.remote_dir_exists?("harhar")
   end

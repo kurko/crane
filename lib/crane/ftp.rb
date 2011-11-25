@@ -12,7 +12,7 @@ module Crane
       @existent_dirs = []
       @nlst = {}
       unless c
-        config = Config.load_config
+        config = Configuration.load_config
         unless config.empty?
           c = {}
           c[:ftp] = config[:ftp] unless config[:ftp].empty?
@@ -58,12 +58,12 @@ module Crane
     end
 
     def remote_dir_exists? remote_dir = false
-      return nil if Config.load_config.empty?
-      connect(Config.CONFIG[:ftp]) if @connection.nil?
+      return nil if Configuration.load_config.empty?
+      connect(Configuration.CONFIG[:ftp]) if @connection.nil?
       
       begin
         Timeout.timeout(10) do
-          @connection.chdir(remote_dir || Config.CONFIG[:ftp][:remote_root_dir])
+          @connection.chdir(remote_dir || Configuration.CONFIG[:ftp][:remote_root_dir])
         end
       rescue 
         return false

@@ -6,7 +6,7 @@ class TestPushCommand < Test::Unit::TestCase
   
   def setup
     unless File.exists?(File.expand_path("../../../../.crane", __FILE__))
-      Config.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
+      Configuration.PATH = File.expand_path("../../../resources/configurations/crane", __FILE__)
     end
     
     @lab_file = "test/resources/source_codes/today_file.rb"

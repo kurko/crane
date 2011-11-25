@@ -6,13 +6,13 @@ module Crane
   module Commands
     class Test < Crane::Engine
       
-      include Config
+      include Configuration
 
       def run
         puts "Starting tests:"
       
         # has configuration file?
-        if Config.has_config_file?
+        if Configuration.has_config_file?
           puts "\tConfiguration file: ok."
         else
           puts "\tConfiguration file: failed."
