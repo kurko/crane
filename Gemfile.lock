@@ -1,14 +1,16 @@
 PATH
   remote: .
   specs:
-    uplift (0.0.1)
+    crane (0.2.1)
 
 GEM
   remote: http://rubygems.org/
   specs:
+    rake (0.8.7)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  uplift!
+  crane!
+  rake
